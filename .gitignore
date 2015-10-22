@@ -1,0 +1,6 @@
+.DS_Store
+.emacs.d/backup
+.emacs.d/undohist
+
+
+.emacs.d/recentf
