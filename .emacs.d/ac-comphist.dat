@@ -1,4 +1,18 @@
-((("ac-use-fuzzy" .
+((("save-buffer" .
+   [0 0 0 0 0 0 0 0 0 0 1])
+  ("activate" .
+   [1 0 0 0 0 0 0 0])
+  ("save-after-moccur-edit-buffer" .
+   [0 0 0 0 0 0 0 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("after" .
+   [1 0 0 0 0])
+  ("defadvice" .
+   [1 0 0 0 0 0 0 0 0])
+  ("moccur-edit-finish-editと同時にファイルを保存する" .
+   [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
+  ("moccur" .
+   [1 0 0 0 0 0])
+  ("ac-use-fuzzy" .
    [1 0 0 0 0 0 0 0 0 0 0 0])
   ("ac-use-menu-map" .
    [1 0 0 0 0 0 0 0 0 0 0 0 0 0 0])
