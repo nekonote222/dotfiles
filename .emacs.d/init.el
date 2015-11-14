@@ -11,139 +11,12 @@
 ;; 引数のディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos" "backup" "elpa")
 
-;; package-installのレポジトリを追加
-(require 'package)
-;; MELPAを追加
-(add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/") t)
-;; MELPA-stableを追加
-(add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/") t)
-;; Marmaladeを追加
-(add-to-list 'package-archives  '("marmalade" . "http://marmalade-repo.org/packages/") t)
-;; Orgを追加
-(add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t)
-;; 初期化
-;;(package-initialize)
 
-
-;; キーバインド
-(global-set-key (kbd "C-x C-r") 'recentf-open-files)
-;; 文字を見やすくする
-(when (eq window-system 'ns)
-  (let ((my-font-height 120)
-        (my-font (cond
-                  (t   "Monaco")  ;; XCode 3.1 で使っているフォント
-                  (nil "Menlo")   ;; XCode 3.2 で使ってるフォント
-                  ))
-        (my-font-ja "Hiragino Maru Gothic Pro"))
-    (setq mac-allow-anti-aliasing t)
-
-    ;; ;; フォントサイズの微調節 (12ptで合うように)
-    ;; (setq face-font-rescale-alist
-    ;;       '(("^-apple-hiragino.*" . 1.2)
-    ;;         (".*osaka-bold.*" . 1.2)
-    ;;         (".*osaka-medium.*" . 1.2)
-    ;;         (".*courier-bold-.*-mac-roman" . 1.0)
-    ;;         (".*monaco cy-bold-.*-mac-cyrillic" . 0.9)
-    ;;         (".*monaco-bold-.*-mac-roman" . 0.9)
-    ;;         ("-cdac$" . 1.3)))
-    
-    ;; ;; デフォルトフォント設定
-    ;; (when my-font
-    ;;   (set-face-attribute 'default nil :family my-font :height my-font-height)
-    ;;   ;;(set-frame-font (format "%s-%d" my-font (/ my-font-height 10)))
-    ;;   )
-    
-    ;; 日本語文字に別のフォントを指定
-    (when my-font-ja
-      (let ((fn (frame-parameter nil 'font))
-            (rg "iso10646-1"))
-        (set-fontset-font fn 'katakana-jisx0201 `(,my-font-ja . ,rg))
-        (set-fontset-font fn 'japanese-jisx0208 `(,my-font-ja . ,rg))
-        (set-fontset-font fn 'japanese-jisx0212 `(,my-font-ja . ,rg))))))
-
-
-
- 
-;; 好きなコマンドを割り振ろう
-(global-set-key (kbd "C-x C-c") 'helm-M-x) ;; 私は helm-M-xにしています
-
-;; C-x C-z(suspend)も変更するのもありでしょう.
-(global-set-key (kbd "C-x C-z") 'your-favorite-command)
-
-;; I never use C-x C-c
-(defalias 'exit 'save-buffers-kill-emacs)
-
-(require 'server)
-
-(unless (server-running-p) ;; 複数サーバ起動を防ぐ
-  (server-start))
-
-;;; 外観に関する設定----------
-
-
-;; 起動メッセージを表示させない
-(setq inhibit-startup-message t)
-
-
-;; ツールバーを非表示
-(tool-bar-mode 0)
-
-
-;; メニューバーを非表示
-(menu-bar-mode 0)
-
-
-;; スタートアップ非表示
-(setq inhibbit-startup-screen t)
-
-
-;; ウインドウのサイズ
-(setq default-frame-alist
-      (append (list '(width . 89) 
-            '(height . 50))
-              default-frame-alist))
-
-
-;; カラム番号も表示
-(column-number-mode t)
-
-
-;; ;; 行番号を表示させない
-;; (line-number-mode 0)
-
-
-;; リージョン内の行数と文字数をモードラインに表示する（範囲指定時のみ）
-(defun count-lines-and-chars ()
-   (if mark-active
-      (format "%d lines,%d chars "
-              (count-lines (region-beginning) (region-end))
-              (- (region-end) (region-beginning)))
-    ;; これだとエコーエリアがチラつく
-    ;;(count-lines-region (region-beginning) (region-end))
-    ""))
-(add-to-list 'default-mode-line-format
-             '(:eval (count-lines-and-chars)))
-
-
-;; タイトルバー
-(setq frame-title-format "%f")
-
-
-;; 行番号を常に表示する
-(global-linum-mode t)
-
-
-;; ;; リージョンの背景色を変更
-;; (set-face-background 'region "darkgreen")
-
-
-(when (require 'color-theme nil t)
-  ;; テーマを読み込むための設定
-  (color-theme-initialize))
-;;   ;; テーマhoberに変更する
-;;   (color-theme-hober))
-
-
+;;; 初期設定ファイルを読み込む
+;; http://coderepos.org/share/browser/lang/elisp/init-loader/init-loader.el
+;; 最近使ったファイルを表示する
+(require 'init-loader)
+(init-loader-load "~/.emacs.d/conf") ; 設定ファイルがあるディレクトリを指定
 
 
 ;; paren-mode : 対応する括弧を強調して表示する
@@ -154,47 +27,6 @@
 ;; フェイスを変更する
 (set-face-background 'show-paren-match-face nil)
 (set-face-underline-p 'show-paren-match-face "blue")
-
-
-
-
-;; http://coderepos.org/share/browser/lang/elisp/init-loader/init-loader.el
-(require 'init-loader)
-(init-loader-load "~/.emacs.d/conf") ; 設定ファイルがあるディレクトリを指定
-
-
-;; C-mにnewline-and-indentを割りあてる。初期値はnewline
-(define-key global-map (kbd "C-m") 'newline-and-indent)
-(define-key global-map (kbd "C-j") 'newline-and-indent)
-;; C-mにnewline-and-indentを割りあてる
-;;(global-set-key (kbd "C-m") 'newline-and-indent)
-
-;; C-Ret で矩形選択
-;;詳しいキーバインド操作：http://dev.ariel-networks.com/articles/emacs/part5/
-(cua-mode t)
-(setq cua-enable-cua-keys nil)
-
-
-;; C-h にバックスペースを割りあてる
-;; C-x ? に元のキーバインドを割りあてる
-(keyboard-translate ?\C-h ?\C-?)
-(define-key global-map (kbd "C-x ?") 'help-command)
-
-
-;; 折り返しトグルコマンド
-(define-key global-map (kbd "C-c l") 'toggle-truncate-lines)
-
-
-;; C-t でウィンドウを切り替える。初期値はtranspose-chars
-(define-key global-map (kbd "C-t") 'other-window)
-
-
-;; TABの表示幅。初期値は8
-(setq-default tab-width 4)
-
-
-;; インデントにタブ文字を使用しない
-(setq-default indent-tabs-mode nil)
 
 
 ;;半角、全角スペースの可視化
@@ -213,64 +45,6 @@
 (set-face-background 'whitespace-tab "DarkSlateGray")
 
 
-;; フレームの透明度
-(set-frame-parameter (selected-frame) 'alpha '(0.85))
-
-
-;; ;; asciiフォントをMenloにする
-;; (set-face-attribute 'default nil
-;;                     :family "Menlo"
-;;                     :height 120)
-
-
-;; ;; 日本語フォントをヒラギノ明朝 Proに
-;; (set-fontset-font
-;;  nil 'japanese-jisx0208
-;;  ;; 英語名の場合
-;;  ;; (font-spec :family "Hiragino Mincho Pro"))
-;;  (font-spec:family "ヒラギノ明朝 Pro"))
-
-
-;; ;; ひらがなとカタカナをモトヤシーダにする
-;; ;; U+3000-303F CJKの記号および句読点
-;; ;; U+3040-309F ひらがな
-;; ;; U+30A0-30FF カタカナ
-;; (set-fontset-font
-;;  nil '(#x3040 . #x30ff)
-;;  (font-spec :family "NfMotoyaCedar"))
-
-
-;; (setq face-font-rescale-alist
-;;       '((".*Menlo.*" . 1.0)
-;;         (".*Hiragino_Mincho_Pro.*" . 1.2)
-;;         (".*nfmotoyacedar-bold.*" . 1.2)
-;;         (".*nfmotoyacedar-medium.*" . 1.2)
-;;         ("-cdac$" . 1.3)))
-
-
-
-;; ;; バックアップファイルを作成しない
-;; (setq make-backup-files nil) ; 初期値はt
-;; ;; オートセーブファイルを作らない
-;; (setq auto-save-default nil) ; 初期値はt
-
-
-;; バックアップとオートセーブファイルを~/.emacs.d/backup/へ集める
-(add-to-list 'backup-directory-alist
-             (cons "." "~/.emacs.d/backup/"))
-(setq auto-save-file-name-transforms
-      `((".*" ,(expand-file-name "~/.emacs.d/backup/") t)))
-;; ロックファイルを作らない
-(setq create-lockfiles nil)
-
-;; オートセーブファイル作成までの秒間隔
-(setq auto-save-timeout 15)
-
-
-;; オートセーブファイル作成までのタイプ間隔
-(setq auto-save-interval 60)
-
-
 ;; auto-installの設定
 (when (require 'auto-install nil t)
   ;; インストールディレクトリを設定する 初期値は~/.emacs.d/auto-install/
@@ -283,8 +57,7 @@
   (auto-install-compatibility-setup))
 
 
-;; redo+.elのインストールをした
-;;(install-elisp "http://www.emacswiki.org/emacs/download/redo+.el")
+
 ;; redo+の設定
 (when (require 'redo+ nil t)
   ;; C-' にリデゥを割りあてる
@@ -329,17 +102,6 @@
 
 
 
-;;トラックパッド用のスクロール設定
-(defun scroll-down-with-lines ()
-  "" (interactive) (scroll-down 2))
-(defun scroll-up-with-lines ()
-  "" (interactive) (scroll-up 2))
-(global-set-key [wheel-up] 'scroll-down-with-lines)
-(global-set-key [wheel-down] 'scroll-up-with-lines)
-(global-set-key [double-wheel-up] 'scroll-down-with-lines)
-(global-set-key [double-wheel-down] 'scroll-up-with-lines)
-(global-set-key [triple-wheel-up] 'scroll-down-with-lines)
-(global-set-key [triple-wheel-down] 'scroll-up-with-lines)
 
 
 ;; ;; auto-comleteの設定
@@ -350,9 +112,9 @@
 ;;   (ac-config-default))
 
 
-;; ;; (require 'auto-complete)
-;; ;; (require 'auto-complete-config)
-;; ;; (global-auto-complete-mode t)
+;; (require 'auto-complete)
+;; (require 'auto-complete-config)
+;; (global-auto-complete-mode t)
 
 
 ;; ;; color-moccurの設定
@@ -399,49 +161,49 @@
 ;; (cua-mode t) ; cua-modeをオン
 ;; (setq cua-enable-cua-keys)
 
-;; ;; python-mode をロードする
-;; (when (autoload 'python-mode "python-mode" "Python editing mode." t)
-;;   ;; python-mode のときのみ python-pep8 のキーバインドを有効にする
-;;   (setq python-mode-hook
-;;   (function (lambda ()
-;;     (local-set-key "\C-c\ p" 'python-pep8))))
-;;   (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
-;;   (setq interpreter-mode-alist (cons '("python" . python-mode)
-;;                                      interpreter-mode-alist)))
+;; ;; ;; python-mode をロードする
+;; ;; (when (autoload 'python-mode "python-mode" "Python editing mode." t)
+;; ;;   ;; python-mode のときのみ python-pep8 のキーバインドを有効にする
+;; ;;   (setq python-mode-hook
+;; ;;   (function (lambda ()
+;; ;;     (local-set-key "\C-c\ p" 'python-pep8))))
+;; ;;   (setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
+;; ;;   (setq interpreter-mode-alist (cons '("python" . python-mode)
+;; ;;                                      interpreter-mode-alist)))
 
-;; ;; flymake for python
-;; (add-hook 'python-mode-hook 'flymake-find-file-hook)
-;; (when (load "flymake" t)
-;;   (defun flymake-pyflakes-init ()
-;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
-;;                        'flymake-create-temp-inplace))
-;;            (local-file (file-relative-name
-;;                         temp-file
-;;                         (file-name-directory buffer-file-name))))
-;;       ;; 昨日紹介した自作のシェルスクリプトを指定する
-;;       ;; 各々の環境にあわせて編集してください
-;;       (list "/usr/local/bin/pyck"  (list local-file))))
-;;   (add-to-list 'flymake-allowed-file-name-masks
-;;                '("\\.py\\'" flymake-pyflakes-init)))
-;; (load-library "flymake-cursor")
+;; ;; ;; flymake for python
+;; ;; (add-hook 'python-mode-hook 'flymake-find-file-hook)
+;; ;; (when (load "flymake" t)
+;; ;;   (defun flymake-pyflakes-init ()
+;; ;;     (let* ((temp-file (flymake-init-create-temp-buffer-copy
+;; ;;                        'flymake-create-temp-inplace))
+;; ;;            (local-file (file-relative-name
+;; ;;                         temp-file
+;; ;;                         (file-name-directory buffer-file-name))))
+;; ;;       ;; 昨日紹介した自作のシェルスクリプトを指定する
+;; ;;       ;; 各々の環境にあわせて編集してください
+;; ;;       (list "/usr/local/bin/pyck"  (list local-file))))
+;; ;;   (add-to-list 'flymake-allowed-file-name-masks
+;; ;;                '("\\.py\\'" flymake-pyflakes-init)))
+;; ;; (load-library "flymake-cursor")
 
-;;  (autoload 'python-mode "python-mode" "Python Mode." t)
-;;  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
-;;  (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+;; ;;  (autoload 'python-mode "python-mode" "Python Mode." t)
+;; ;;  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
+;; ;;  (add-to-list 'interpreter-mode-alist '("python" . python-mode))
 
-;; ;; カラーテーマを設定
-;; (when (require 'color-theme-solarized)
-;;     (color-theme-solarized-dark))
+;; ;; ;; カラーテーマを設定
+;; ;; (when (require 'color-theme-solarized)
+;; ;;     (color-theme-solarized-dark))
 
 
-;; (defface my-hl-line-face
-;;   ;; 背景がdarkならば背景色を紺に
-;;   '((((class color) (background dark))
-;;      (:background "NavyBlue" t))
-;;     ;; 背景がlightならば背景色を緑に
-;;     (((class color) (background light))
-;;      (:background "LightGoldenrodYellow" t))
-;;     (t (:bold t)))
-;;   "hl-line's my face")
-;; (setq hl-line-face 'my-hl-line-face)
-;; (global-hl-line-mode t)
+;; ;; (defface my-hl-line-face
+;; ;;   ;; 背景がdarkならば背景色を紺に
+;; ;;   '((((class color) (background dark))
+;; ;;      (:background "NavyBlue" t))
+;; ;;     ;; 背景がlightならば背景色を緑に
+;; ;;     (((class color) (background light))
+;; ;;      (:background "LightGoldenrodYellow" t))
+;; ;;     (t (:bold t)))
+;; ;;   "hl-line's my face")
+;; ;; (setq hl-line-face 'my-hl-line-face)
+;; ;; (global-hl-line-mode t)
