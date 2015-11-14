@@ -1,4 +1,3 @@
-
 ;; http://qiita.com/catatsuy/items/f9fad90fa1352a4d3161
 ;; 自動保存
 (when (require 'recentf-ext nil t)

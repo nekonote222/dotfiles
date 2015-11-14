@@ -7,7 +7,6 @@
         (add-to-list 'load-path default-directory)
         (if (fboundp 'normal-top-level-add-subdirs-to-load-path)
             (normal-top-level-add-subdirs-to-load-path))))))
-
 ;; 引数のディレクトリとそのサブディレクトリをload-pathに追加
 (add-to-load-path "elisp" "conf" "public_repos" "backup" "elpa")
 
@@ -19,102 +18,20 @@
 (init-loader-load "~/.emacs.d/conf") ; 設定ファイルがあるディレクトリを指定
 
 
-;; paren-mode : 対応する括弧を強調して表示する
-(setq show-paren-delay 0) ; 表示までの秒数。初期値は0.125
-(show-paren-mode t) ; 有効化
-;; parenのスタイル: expressionは括弧内も強調表示
-(setq show-paren-style 'expression)
-;; フェイスを変更する
-(set-face-background 'show-paren-match-face nil)
-(set-face-underline-p 'show-paren-match-face "blue")
+;; #!から始まるファイルの保存時に実行権限を与える
+(add-hook 'after-save-hook
+          'executable-make-buffer-file-executable-if-script-p)
 
 
-;;半角、全角スペースの可視化
-(setq whitespace-style
-      '(tabs tab-mark spaces space-mark))
-(setq whitespace-space-regexp "\\(\x3000+\\)")
-(setq whitespace-display-mappings
-      '((space-mark ?\x3000 [?\□])
-        (tab-mark   ?\t   [?\xBB ?\t])
-        ))
-(require 'whitespace)
-(global-whitespace-mode 1)
-(set-face-foreground 'whitespace-space "LightSlateGray")
-(set-face-background 'whitespace-space "DarkSlateGray")
-(set-face-foreground 'whitespace-tab "LightSlateGray")
-(set-face-background 'whitespace-tab "DarkSlateGray")
-
-
-;; auto-installの設定
-(when (require 'auto-install nil t)
-  ;; インストールディレクトリを設定する 初期値は~/.emacs.d/auto-install/
-  (setq auto-install-directory "~/.emacs.d/elisp/")
-  ;; EmacsWikiに登録されているelispの名前を取得する
-  (auto-install-update-emacswiki-package-name t)
-  ;; 必要であればプロキシの設定を行う
-  (setq url-proxy-service '(("http" . "localhost:8339")))
-  ;; install-elispの関数を利用可能にする
-  (auto-install-compatibility-setup))
-
-
-
-;; redo+の設定
-(when (require 'redo+ nil t)
-  ;; C-' にリデゥを割りあてる
-  ;;(global-set-key (kbd "C-'") 'redo)
-  ;; 日本語キーボードの場合 C-. などが良いかも
-  (global-set-key (kbd "C-.") 'redo)
-  )
-
-
-;;; anythingの設定
-;;(auto-install-batch "anything")
-(when (require 'anything nil t)
-  (setq
-   ;; 候補を表示するまでの時間。デフォルトは0.5
-   anything-idle-delay 0.3
-   ;; タイプして再描画するまでの時間。デフォルトは0.1
-   anything-input-idle-delay 0.2
-   ;; 候補の最大数表示。デフォルトは50
-   anything-candidate-number-limit 100
-   ;; 候補が多い時に体感速度を速くする
-   anything-quick-update t
-   ;; 候補選択ショートカットをアルファベットに
-   anything-enable-shortcuts 'alphabet)
-  (when (require 'anything-config nil t)
-    ;; root権限でアクションを実行する時のコマンド
-    ;; デフォルトは"su"
-    (setq anything-su-or-sudo "sudo"))
-  (require 'anything-match-plugin nil t)
-  (when (and (executable-find "cmigemo")
-             (require 'migemo nil t))
-    (require 'anything-migemo nil t))
-  (when (require 'anything-complete nil t)
-    ;; lispシンボルの補完候補の再検索時間
-    (anything-lisp-complete-symbol-set-timer 150))
-  (require 'anything-show-completion nil t)
-  (when (require 'auto-install nil t)
-    (require 'anything-auto-install nil t))
-  (when (require 'descbinds-anything nil t)
-    ;; describe-bindingsをAnythingに置き換える
-    (descbinds-anything-install)))
-
-
-
-
-
-
-;; ;; auto-comleteの設定
-;; (when (require 'auto-completeconfig nil t)
-;;   (add-to-list 'ac-dictionary-directories
-;;                "~/.emacs.d/elisp/ac-dict")
-;;   (define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-;;   (ac-config-default))
-
-
-;; (require 'auto-complete)
-;; (require 'auto-complete-config)
-;; (global-auto-complete-mode t)
+;; カーソル位置にあるElisp関数や変数の情報をエコーエリアへ表示させる
+(defun elisp-mode-hooks ()
+  "lisp-mode-hooks"
+  (when (require 'eldoc nil t)
+    (setq eldoc-idle-delay 0.2)
+    (setq eldoc-echo-area-use-multiline-p t)
+    (turn-on-eldoc-mode)))
+;; emacs-lisp-modeのフックをセット
+(add-hook 'emacs-lisp-mode-hook 'elisp-mode-hooks)
 
 
 ;; ;; color-moccurの設定
