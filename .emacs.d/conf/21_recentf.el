@@ -1,4 +1,5 @@
 ;; http://qiita.com/catatsuy/items/f9fad90fa1352a4d3161
+;; 最近使ったファイルを表示する
 ;; 自動保存
 (when (require 'recentf-ext nil t)
   (setq recentf-max-saved-items 2000)

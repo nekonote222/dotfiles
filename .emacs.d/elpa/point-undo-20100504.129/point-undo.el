@@ -2,6 +2,7 @@
 
 ;;  Copyright (C) 2006,2008 rubikitch <rubikitch atmark ruby-lang.org>
 ;;  Version: $Id: point-undo.el,v 1.6 2009/10/16 20:37:37 rubikitch Exp rubikitch $
+;; Package-Version: 20100504.129
 
 ;;  This program is free software; you can redistribute it and/or modify
 ;;  it under the terms of the GNU General Public License as published by

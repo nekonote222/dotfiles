@@ -52,6 +52,7 @@ Notice that using \\[next-error] or \\[compile-goto-error] modifies
   :type '(repeat string)
   :group 'python-pep8)
 
+;; 自分でパスを変更した
 (defcustom python-pep8-command "/usr/local/bin/pep8"
   "PEP8 command."
   :type '(file)
@@ -113,3 +114,4 @@ output buffer, to go to the lines where pep8 found matches."
 (defalias 'pep8 'python-pep8)
 
 (provide 'python-pep8)
+;;; python-pep8.el ends here
