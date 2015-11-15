@@ -26,7 +26,11 @@
 
  (autoload 'python-mode "python-mode" "Python Mode." t)
  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-mode))
- (add-to-list 'interpreter-mode-alist '("python" . python-mode))
+(add-to-list 'interpreter-mode-alist '("python" . python-mode))
+
+(defadvice flymake-post-syntax-check (before flymake-force-check-was-interrupted)
+  (setq flymake-check-was-interrupted t))
+(ad-activate 'flymake-post-syntax-check)
 
 ;; ;; カラーテーマを設定
 ;; (when (require 'color-theme-solarized)
