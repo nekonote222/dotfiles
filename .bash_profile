@@ -20,6 +20,8 @@ export VERSIONER_PYTHON_PREFER_32_BIT=yes
 #export PYTHONPATH="/usr/local/lib/python2.7/site-packages/:$PYTHONPATH"
 export PYTHONPATH=/usr/local/Cellar/opencv/2.4.5/lib/python2.7/site-packages:$PYTHONPATH
 
+# android
+export PATH=$PATH:/Users/hayato/Library/Android/sdk/platform-tools
 
 if [ -f $(brew --prefix)/etc/bash_completion ]; then
     . $(brew --prefix)/etc/bash_completion
