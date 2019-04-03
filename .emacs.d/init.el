@@ -35,7 +35,7 @@
 
 ;; cua-modeの設定
 (cua-mode t) ; cua-modeをオン
-(setq cua-enable-cua-keys)
+(setq cua-enable-cua-keys nil) ; デフォルトキーバインドを無効化
 
 (require 'py-autopep8)
 (add-hook 'python-mode-hook 'py-autopep8-enable-on-save)
